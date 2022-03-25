@@ -1,17 +1,17 @@
-<<<<<<< HEAD
+
 # req lib
 library("reshape2")
 # import sensor file
 sensors <- data.frame(read.csv('ow_ns.csv'))
 names(sensors)[1] <- "datetime"
-=======
+
 # import sensor file
 sensors <- data.frame(read.csv("ow_ns.csv"))
->>>>>>> 409e63fa14e6568626fb423d06501f72470b7864
+
+
 class(sensors)
 head(sensors)
 
-<<<<<<< HEAD
 #Long form
 sensor_melt <- melt(sensors,
                     na.rm = FALSE,
@@ -19,7 +19,7 @@ sensor_melt <- melt(sensors,
 n_main_temp <-subset(sensor_melt,
        select = "variable"
 )
-=======
+
 # Define subset values
 temp_vals <- subset(sensors, select = c("ï..datetime", "temp_n_main", "temp_n_e", "temp_n_m", "temp_n_x", "temp_s_main", "temp_s_a11", "temp_s_a16", "temp_s_y", "temp_s_g")) # nolint
 rh_vals <- subset(sensors, select = c("ï..datetime", "rh_n_main", "rh_n_e", "rh_n_m", "rh_n_x", "rh_s_main", "rh_s_a11", "rh_s_a16", "rh_s_y", "rh_s_g")) # nolint
