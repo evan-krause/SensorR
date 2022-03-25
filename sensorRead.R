@@ -50,4 +50,4 @@ boxplot(sensors$temp_n_main, sensors$temp_n_x, sensors$temp_n_e)
 hist(sensors$temp_n_main)
 
 t.test(sensors$temp_n_main, sensors$temp_s_main)
->>>>>>> 409e63fa14e6568626fb423d06501f72470b7864
+
