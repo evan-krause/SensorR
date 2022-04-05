@@ -1,32 +1,31 @@
 
 # req lib
 library("reshape2")
+library("dplyr")
 # import sensor file
 sensors <- data.frame(read.csv('ow_ns.csv'))
 names(sensors)[1] <- "datetime"
 
-# import sensor file
-sensors <- data.frame(read.csv("ow_ns.csv"))
-
-
-class(sensors)
-head(sensors)
-
 #Long form
-sensor_melt <- melt(sensors,
-                    na.rm = FALSE)
-n_main_temp <-subset(sensor_melt,
-       select = "variable"
-)
+sensor_melt <- melt(sensors, na.rm = FALSE)
 
-# # Define subset values
-# temp_vals <- subset(sensors, select = c("ï..datetime", "temp_n_main", "temp_n_e", "temp_n_m", "temp_n_x", "temp_s_main", "temp_s_a11", "temp_s_a16", "temp_s_y", "temp_s_g")) # nolint
-# rh_vals <- subset(sensors, select = c("ï..datetime", "rh_n_main", "rh_n_e", "rh_n_m", "rh_n_x", "rh_s_main", "rh_s_a11", "rh_s_a16", "rh_s_y", "rh_s_g")) # nolint
-# wet_vals <- subset(sensors, select = c("ï..datetime", "wet_n_main", "wet_n_e", "wet_n_m", "wet_n_x", "wet_s_main", "wet_s_a11", "wet_s_a16", "wet_s_y", "wet_s_g")) # nolint
-# events <- subset(sensors, select = c("ï..datetime", "event_n_main", "event_n_e", "event_n_m", "event_n_x", "event_s_main", "event_s_a11", "event_s_a16", "event_s_y", "event_s_g")) # nolint
-# intervals <- subset(sensors, select = c("ï..datetime", "wet_int_n_main", "wet_int_n_e", "wet_int_n_m", "wet_int_n_x", "wet_int_s_main", "wet_int_s_a11", "wet_int_s_a16", "wet_int_s_y", "wet_int_s_g")) # nolint
-# wet_vals <- subset(sensors, select = c("ï..datetime", "wet_n_main", "wet_n_e", "wet_n_m", "wet_n_x", "wet_s_main", "wet_s_a11", "wet_s_a16", "wet_s_y", "wet_s_g")) # nolint
-# 
+test_var = rep("rh_n-main", 5) 
+test_out = strsplit(test_var, split = "_") ## split para_reg_site form
+unlist(test_out) ## simplify list structure to vector
+matrix(unlist(test_out), ncol = 3, byrow = T) ## convert list to matrix
+test_var <- as.character(sensor_melt$variable) ## define variable col as character
+
+head((test_var))
+
+test_out = strsplit(test_var, split = "_") ## split para_reg_site form
+
+para_frame <- data.frame(matrix(unlist(test_out), ncol = 2, byrow = T)) ## convert to data frame
+names(para_frame) = c("para", "site")
+
+sensor2 <- cbind(sensor_melt, para_frame) ## Combine melted data and site/para cols
+
+n_main <- subset(sensor2, site == "n.main")
+
 # hist(sensors$rh_n_e)
 # hist(sensors$rh_n_m)
 # hist(sensors$rh_n_x)
@@ -40,38 +39,29 @@ n_main_temp <-subset(sensor_melt,
 #      pch = 16,
 #      col = adjustcolor("black", 0.1))
 # 
-# plot(rh_n_x ~ temp_n_x,
-#      data = subset(sensors, rh_n_e < 99),
-#      pch = 16,
-#      col = adjustcolor("black", 0.1))
+ # plot(n_main$value,
+ #     data = subset(sensor2, n_main$value == "rh"),
+ #     pch = 16,
+ #     col = adjustcolor("black", 0.1))
 # 
 # boxplot(sensors$temp_n_main, sensors$temp_n_x, sensors$temp_n_e)
 # hist(sensors$temp_n_main)
 # 
 # t.test(sensors$temp_n_main, sensors$temp_s_main)
 
+## North sites
+n_main <- sensor2 %>% filter(site == "n.main")
+n_m <- sensor2 %>% filter(site == "n.m")
+n_e <- sensor2 %>% filter(site == "n.e")
+n_x <- sensor2 %>% filter(site == "n.x")
 
-test_var = rep("rh_n_main", 5)
-
-test_out = strsplit(test_var, split = "_")
-test_out 
-unlist(test_out)
-
-matrix(unlist(test_out), ncol = 3, byrow = T)
-
-
-test_var <- as.character(sensor_melt$variable)
-
-head((test_var))
+## South sites
+s_main <- sensor2 %>% filter(site == "s.main")
+s_a11 <- sensor2 %>% filter(site == "s.a11")
+s_a16 <- sensor2 %>% filter(site == "s.a16")
+s_g <- sensor2 %>% filter(site == "s.g")
+s_y <- sensor2 %>% filter(site == "s.y")
 
 
-test_out = strsplit(test_var, split = "_")
-test_out 
 
-rh_frame <- data.frame(matrix(unlist(test_out), ncol = 3, byrow = T))
-names(rh_frame) = c("para", "region", "site")
-
-sensor2 <- cbind(sensor_melt, rh_frame)
-
-tail(sensor2)
 
