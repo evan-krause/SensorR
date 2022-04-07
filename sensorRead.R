@@ -1,12 +1,17 @@
 
+#install.packages("tidyverse")
+
 # req lib
 library("reshape2")
 library("dplyr")
+library("ggplot2")
+
+
 # import sensor file
 sensors <- data.frame(read.csv('ow_ns.csv'))
 names(sensors)[1] <- "datetime"
 
-#Long form
+#Convert to long form
 sensor_melt <- melt(sensors, na.rm = FALSE)
 
 test_var = rep("rh_n-main", 5) 
@@ -24,19 +29,30 @@ names(para_frame) = c("para", "site")
 
 sensor2 <- cbind(sensor_melt, para_frame) ## Combine melted data and site/para cols
 
+#Convert datetime
+sensor2$date <- format(as.POSIXct(sensor2$datetime,format="%m/%d/%Y %H:%M"),"%Y/%m/%d")
+sensor2$time <- format(as.POSIXct(sensor2$datetime,format="%m/%d/%Y %H:%M"),"%H:%M")
+
+#Convert date from char to date class
+date_frame <- data.frame(as.Date.character(sensor2$date))
+sensorFinal <- cbind(sensor2, date_frame)
+
+##Values separated by year
+vals_2020 <- subset(sensorFinal, sensorFinal$as.Date.character.sensor2.date. < "2021-03-26")
+vals_2021 <- subset(sensorFinal, sensorFinal$as.Date.character.sensor2.date. >= "2021-03-26")
 
 ## North sites
-n_main <- sensor2 %>% filter(site == "n.main")
-n_m <- sensor2 %>% filter(site == "n.m")
-n_e <- sensor2 %>% filter(site == "n.e")
-n_x <- sensor2 %>% filter(site == "n.x")
+n_main <- sensorFinal %>% filter(site == "n.main")
+n_m <- sensorFinal %>% filter(site == "n.m")
+n_e <- sensorFinal %>% filter(site == "n.e")
+n_x <- sensorFinal %>% filter(site == "n.x")
 
 ## South sites
-s_main <- sensor2 %>% filter(site == "s.main")
-s_a11 <- sensor2 %>% filter(site == "s.a11")
-s_a16 <- sensor2 %>% filter(site == "s.a16")
-s_g <- sensor2 %>% filter(site == "s.g")
-s_y <- sensor2 %>% filter(site == "s.y")
+s_main <- sensorFinal %>% filter(site == "s.main")
+s_a11 <- sensorFinal %>% filter(site == "s.a11")
+s_a16 <- sensorFinal %>% filter(site == "s.a16")
+s_g <- sensorFinal %>% filter(site == "s.g")
+s_y <- sensorFinal %>% filter(site == "s.y")
 
 # N-main
 nmain_temp <- subset(n_main, para == "temp")
@@ -83,9 +99,8 @@ sg_temp <- subset(s_g, para == "temp")
 sg_rh <- subset(s_g, para == "rh")
 sg_wet <- subset(s_g, para == "wet")
 
-
-
-
+#ggplot(sg_temp, aes(datetime, value)) + geom_point()
+#
 # hist(sensors$rh_n_e)
 # hist(sensors$rh_n_m)
 # hist(sensors$rh_n_x)
