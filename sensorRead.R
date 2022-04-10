@@ -43,7 +43,12 @@ sensor2$time <-
 #Convert date from char to date class
 date_frame <- data.frame(as.Date.character(sensor2$date))
 sensorFinal <- cbind(sensor2, date_frame)
+names(sensorFinal)[8] <- "Date"
 
+#Replace NA vals with 0 then subset
+
+sensorFinal <- replace(sensorFinal, is.na(sensorFinal$value), 0.1)
+sensorFinal <- subset(sensorFinal, value != 0.1)
 
 ##Values separated by year
 vals_2020 <-
