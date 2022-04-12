@@ -177,13 +177,16 @@ hist(wet_vals$value)
 lm(temp_vals$value ~ rh_vals$value)
 
 # Additive linear model of RH as func of wetness + temperature
-rh_wet_templm <- lm(rh_vals$value ~ wet_vals$value * temp_vals$value)
+rh_wet_templm <- lm(rh_vals$value ~ wet_vals$value + temp_vals$value)
 anova(lm(rh_vals$value ~ wet_vals$value + temp_vals$value))
 summary(rh_wet_templm)
 rh_wetTempresidual <- resid(lm(temp_vals$value ~ rh_vals$value)) 
 hist(rh_wetTempresidual)
 shapiro.test(rh_wetTempresidual) 
 AIC(rh_wet_templm)
+
+shapiro.test(sample(rh_wetTempresidual, size = 5000))
+
 
 plot(rh_wet_templm)
 
@@ -230,5 +233,6 @@ boxplot(nmain_rh$value, smain_rh$value,
         main = "2020-2021 RH values at North and South main sites",
         xlab = c("North main", "South main"),
         ylab = "Relative humidity (%)")
+
 
         
