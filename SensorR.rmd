@@ -1,0 +1,52 @@
+---
+title: "2020-21 OrchardWatch sensor analysis"
+author: "Evan Krause
+output: pdf_document
+---
+
+```{r}
+# req lib
+library("reshape2")
+library("dplyr")
+library("ggplot2")
+library("tidyr")
+
+# import sensor file
+sensors <- data.frame(read.csv('ow_ns.csv'))
+names(sensors)[1] <- "datetime"
+
+#Convert to long form
+sensor_melt <- melt(sensors, na.rm = FALSE)
+test_var = rep("rh_n-main", 5)
+test_out = strsplit(test_var, split = "_") ## split para_reg_site form
+unlist(test_out) ## simplify list structure to vector
+matrix(unlist(test_out), ncol = 3, byrow = T) ## convert list to matrix
+
+test_var <-
+  as.character(sensor_melt$variable) ## define variable col as character
+test_out = strsplit(test_var, split = "_") ## split para_reg_site form
+
+para_frame <-
+  data.frame(matrix(unlist(test_out), ncol = 2, byrow = T)) ## convert to data frame
+#para_frame <- para_frame %>% separate(X1, c("temp", "rh", "wet"))
+names(para_frame) = c("para", "site")
+
+sensor2 <-
+  cbind(sensor_melt, para_frame) ## Combine melted data and site/para cols
+
+
+#Convert datetime
+sensor2$date <-
+  format(as.POSIXct(sensor2$datetime, format = "%m/%d/%Y %H:%M"),
+         "%Y/%m/%d")
+sensor2$time <-
+  format(as.POSIXct(sensor2$datetime, format = "%m/%d/%Y %H:%M"),
+         "%H:%M")
+
+#Convert date from char to date class and rename
+date_frame <- data.frame(as.Date.character(sensor2$date))
+sensorFinal <- cbind(sensor2, date_frame)
+names(sensorFinal)[8] <- "Date"
+sensorFinal$date <- NULL
+```
+

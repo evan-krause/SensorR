@@ -5,6 +5,7 @@
 library("reshape2")
 library("dplyr")
 library("ggplot2")
+library("tidyr")
 
 # import sensor file
 sensors <- data.frame(read.csv('ow_ns.csv'))
@@ -26,6 +27,7 @@ test_out = strsplit(test_var, split = "_") ## split para_reg_site form
 
 para_frame <-
   data.frame(matrix(unlist(test_out), ncol = 2, byrow = T)) ## convert to data frame
+#para_frame <- para_frame %>% separate(X1, c("temp", "rh", "wet"))
 names(para_frame) = c("para", "site")
 
 sensor2 <-
@@ -44,20 +46,30 @@ sensor2$time <-
 date_frame <- data.frame(as.Date.character(sensor2$date))
 sensorFinal <- cbind(sensor2, date_frame)
 names(sensorFinal)[8] <- "Date"
+sensorFinal$date <- NULL
+
+#para_frame %>% separate(X1, c("temp", "rh", "wet"))
+rh_frame <- sensorFinal %>% select(para == "rh", value)
+
 
 #Replace NA vals with 0 then subset
-
-sensorFinal <- replace(sensorFinal, is.na(sensorFinal$value), 0.1)
+##sensorFinal <- replace(sensorFinal, is.na(sensorFinal$value), 1)
+sensorFinal <- subset(sensorFinal, value != 0.1)
+sensorFinal[is.na(sensorFinal$value)] <- 0.1
 sensorFinal <- subset(sensorFinal, value != 0.1)
 
-##Values separated by year
-vals_2020 <-
-  subset(sensorFinal,
-         sensorFinal$as.Date.character.sensor2.date. < "2021-03-26")
-vals_2021 <-
-  subset(sensorFinal,
-         sensorFinal$as.Date.character.sensor2.date. >= "2021-03-26")
 
+##Values separated by year
+rh_vals <-
+  subset(sensorFinal,
+         sensorFinal$para == "rh")
+temp_vals <-
+  subset(sensorFinal,
+         sensorFinal$para == "temp")
+
+wet_vals <-
+  subset(sensorFinal,
+         sensorFinal$para >= "wet")
 
 ## North sites
 n_main <- sensorFinal %>% filter(site == "n.main")
@@ -119,8 +131,31 @@ sg_rh <- subset(s_g, para == "rh")
 sg_wet <- subset(s_g, para == "wet")
 
 
-#ggplot(sg_temp, aes(datetime, value)) + geom_point()
-#
+#ggplot(vals_2020, aes(site, value, color = site)) + geom_point()
+
+
+ggplot(sensors, aes(rh_n.main, wet_n.main)) + geom_point() + geom_smooth()
+lm(sensors$rh_n.main ~ sensors$wet_n.main)
+
+
+
+sensors$rh_n.main ~ sensors$wet_n.main
+
+lm_nmain = lm(sensors$rh_n.main ~ sensors$wet_n.main)
+
+
+plot(lm_nmain)
+anova(lm_nmain)
+nmain_resid <- residuals(lm_nmain)
+hist(nmain_resid)
+
+lm_smain = lm(sensors$rh_s.main ~ sensors$wet_s.main)
+summary.lm(lm_smain)
+plot(lm_smain)
+anova(lm_smain)
+smain_resid <- residuals(lm_smain)
+hist(smain_resid)
+
 hist(
   sg_temp$value,
   data = subset(
@@ -134,9 +169,26 @@ hist(
 # 
 # hist(sensors$wet_n_e)
 # hist(sensors$wet_n_m)
-# hist(sensors$wet_n_x)
-# 
- plot(
+#hist(sensorFinal$value)
+hist(temp_vals$value) 
+hist(rh_vals$value) 
+hist(wet_vals$value)
+
+lm(temp_vals$value ~ rh_vals$value)
+
+# Additive linear model of RH as func of wetness + temperature
+rh_wet_templm <- lm(rh_vals$value ~ wet_vals$value * temp_vals$value)
+anova(lm(rh_vals$value ~ wet_vals$value + temp_vals$value))
+summary(rh_wet_templm)
+rh_wetTempresidual <- resid(lm(temp_vals$value ~ rh_vals$value)) 
+hist(rh_wetTempresidual)
+shapiro.test(rh_wetTempresidual) 
+AIC(rh_wet_templm)
+
+plot(rh_wet_templm)
+
+
+plot(
    ne_temp$value ~ ne_rh$value,
    data = subset(
      sensorFinal,
@@ -158,14 +210,18 @@ hist(
          smain_temp$value)
 # hist(sensors$temp_n_main)
 # 
-t.test(nmain_temp$value, smain_temp$value,
+t.test(nmain_temp$value, nx_temp$value,
        data = subset(sensorFinal,
-       sensorFinal$as.Date.character.sensor2.date. <= "2021-03-26")
+       sensorFinal$Date <= "2021-03-26")
 )
 
 t.test(
-  nmain_rh$value, smain_rh$value,
-       data = subset(sensorFinal, sensorFinal$as.Date.character.sensor2.date. <= "2021-03-26")) ## Woo!
+  nm_rh$value, sg_rh$value,
+       data = subset(sensorFinal, sensorFinal$Date <= "2021-03-26")) ## Woo!
+
+t.test(
+  nm_wet$value, sg_wet$value,
+  data = subset(sensorFinal, sensorFinal$Date <= "2021-03-26")) ## Woo!
 
 
 boxplot(nmain_rh$value, smain_rh$value,
