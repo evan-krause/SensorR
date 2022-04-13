@@ -59,7 +59,7 @@ sensorFinal[is.na(sensorFinal$value)] <- 0.1
 sensorFinal <- subset(sensorFinal, value != 0.1)
 
 
-##Values separated by year
+##Values separated by parameter
 rh_vals <-
   subset(sensorFinal,
          sensorFinal$para == "rh")
@@ -142,8 +142,10 @@ lm(sensors$rh_n.main ~ sensors$wet_n.main)
 sensors$rh_n.main ~ sensors$wet_n.main
 
 lm_nmain = lm(sensors$rh_n.main ~ sensors$wet_n.main)
-
-
+lmnmain = lm(nmain_rh$value ~ nmain_wet$value)
+summary(lm_nmain)
+summary(lmnmain)
+anova(lmnmain)
 plot(lm_nmain)
 anova(lm_nmain)
 nmain_resid <- residuals(lm_nmain)
@@ -231,7 +233,7 @@ boxplot(nmain_rh$value, smain_rh$value,
         data = subset(sensorFinal,
                       sensorFinal$as.Date.character.sensor2.date. >= "2021-03-26"),
         main = "2020-2021 RH values at North and South main sites",
-        xlab = c("North main", "South main"),
+        names = c("North main", "South main"),
         ylab = "Relative humidity (%)")
 
 
