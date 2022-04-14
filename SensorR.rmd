@@ -16,6 +16,7 @@ library("reshape2")
 library("dplyr")
 library("ggplot2")
 library("tidyr")
+library("psych")
 
 # import sensor file
 sensors <- data.frame(read.csv('ow_ns.csv'))
@@ -60,7 +61,7 @@ rh_vals <-
          sensorFinal$para == "rh")
 rh_vals20 <- subset(rh_vals, rh_vals$Date <= "2021-03-26")
 rh_vals21 <- subset(rh_vals, rh_vals$Date > "2021-03-26")
-  
+
 temp_vals <-
   subset(sensorFinal,
          sensorFinal$para == "temp")
@@ -72,6 +73,24 @@ wet_vals <-
          sensorFinal$para >= "wet")
 wet_vals20 <- subset(wet_vals, wet_vals$Date <= "2021-03-26")
 wet_vals21 <- subset(wet_vals, wet_vals$Date > "2021-03-26")
+
+## Define parameter frame
+para_vals <-
+  data.frame(
+    sensorFinal$Date,
+    sensorFinal$time,
+    sensorFinal$site,
+    temp_vals$value,
+    rh_vals$value,
+    wet_vals$value
+  )
+names(para_vals) <- c("date", "time", "site", "temp", "rh", "wet")
+
+para2 <- data.frame(
+  temp_vals$value,
+    rh_vals$value,
+    wet_vals$value
+  )
 
 ## North sites
 n_main <- sensorFinal %>% filter(site == "n.main")
@@ -161,16 +180,27 @@ summary(wet_vals20$value)
 "2021"
 summary(wet_vals21$value)
 ```
+## Site Comparisons
+
+### North - main vs South - main 2020
+```{r}
+"Temperature"
+t.test(nmain_temp$value, smain_temp$value,
+       data = subset(sensorFinal, sensorFinal$Date <= "2021-03-26"))
+"Relative humidity"
+t.test(nmain_rh$value, smain_rh$value,
+       data = subset(sensorFinal, sensorFinal$Date <= "2021-03-26"))
+"Leaf wetness"
+t.test(nmain_wet$value, smain_wet$value,
+       data = subset(sensorFinal, sensorFinal$Date <= "2021-03-26"))
+```
 
 
+### Relative humidity as a function of temperature and wetness (additive - North Main site)
 ```{r}
 summary(lm(nmain_rh$value ~ nmain_temp$value + nmain_wet$value))
 anova(lm(nmain_temp$value ~ nmain_rh$value))
 
-summary(lm(smain_temp$value~smain_rh$value))
-anova(lm(smain_temp$value~smain_rh$value))
-
-plot(sample(rh_vals20$value, size = 10000) ~ sample(wet_vals20$value, size = 10000))
 ```
 
 
@@ -276,8 +306,6 @@ hist(sg_rh$value,
 
 ```
 
-
-
 ```{r}
 boxplot(
   nmain_rh$value,
@@ -291,6 +319,70 @@ boxplot(
   sg_rh$value,
   ylab = "Relative humidity (%)",
   main = "2020-2021 RH ranges",
+  names = c(
+    "N-ma",
+    "N-X",
+    "N-E",
+    "N-M",
+    "S-ma",
+    "S-A11",
+    "S-A16",
+    "S-Y",
+    "S-G"
+  )
+)
+```
+
+
+## Wetness values by site
+
+```{r}
+
+par(mfrow = c(3,3))
+
+hist(nmain_wet$value,
+     main = "N-main",
+     xlab = "Wetness %")
+hist(nx_wet$value,
+     main = "N-X",
+     xlab = "Wetness %")
+hist(ne_wet$value,
+     main = "N-E",
+     xlab = "Wetness %")
+hist(nm_wet$value,
+     main = "N-M",
+     xlab = "Wetness %")
+hist(smain_wet$value,
+     main = "S-main",
+     xlab = "Wetness %")
+hist(sa11_wet$value,
+     main = "S-A11",
+     xlab = "Wetness %")
+hist(sa16_wet$value,
+     main = "S-A16",
+     xlab = "Wetness %")
+hist(sy_wet$value,
+     main = "S-Y",
+     xlab = "Wetness %")
+hist(sg_wet$value,
+     main = "S-G",
+     xlab = "Wetness %")
+
+```
+
+```{r}
+boxplot(
+  nmain_wet$value,
+  nx_wet$value,
+  ne_wet$value,
+  nm_wet$value,
+  smain_wet$value,
+  sa11_wet$value,
+  sa16_wet$value,
+  sy_wet$value,
+  sg_wet$value,
+  ylab = "Leaf Wetness (%)",
+  main = "2020-2021 Leaf Wetness ranges",
   names = c(
     "N-ma",
     "N-X",
