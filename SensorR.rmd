@@ -54,17 +54,24 @@ sensorFinal <- cbind(sensor2, date_frame)
 names(sensorFinal)[8] <- "Date"
 sensorFinal$date <- NULL
 
-##Values separated by parameter
+##Values separated by parameter and year
 rh_vals <-
   subset(sensorFinal,
          sensorFinal$para == "rh")
+rh_vals20 <- subset(rh_vals, rh_vals$Date <= "2021-03-26")
+rh_vals21 <- subset(rh_vals, rh_vals$Date > "2021-03-26")
+  
 temp_vals <-
   subset(sensorFinal,
          sensorFinal$para == "temp")
+temp_vals20 <- subset(temp_vals, temp_vals$Date <= "2021-03-26")
+temp_vals21 <- subset(temp_vals, temp_vals$Date > "2021-03-26")
 
 wet_vals <-
   subset(sensorFinal,
          sensorFinal$para >= "wet")
+wet_vals20 <- subset(wet_vals, wet_vals$Date <= "2021-03-26")
+wet_vals21 <- subset(wet_vals, wet_vals$Date > "2021-03-26")
 
 ## North sites
 n_main <- sensorFinal %>% filter(site == "n.main")
@@ -128,12 +135,42 @@ sg_wet <- subset(s_g, para == "wet")
 
 # Numeric exploration
 
-```{r}
-summary(lm(nmain_rh$value~nmain_temp$value + nmain_wet$value))
-anova(lm(nmain_temp$value~nmain_rh$value))
 
-AIC(lm(nmain_rh$value~nmain_temp$value + nmain_wet$value),lm(nmain_temp$value~nmain_rh$value))
+## values orchard-wide during first inoculum period
+
+### Temperature
+```{r}
+"2020"
+summary(temp_vals20$value)
+"2021"
+summary(temp_vals21$value)
+```
+
+### Relative humidity
+```{r}
+"2020"
+summary(rh_vals20$value)
+"2021"
+summary(rh_vals21$value)
+```
+
+### Leaf wetness
+```{r}
+"2020"
+summary(wet_vals20$value)
+"2021"
+summary(wet_vals21$value)
+```
+
+
+```{r}
+summary(lm(nmain_rh$value ~ nmain_temp$value + nmain_wet$value))
+anova(lm(nmain_temp$value ~ nmain_rh$value))
+
 summary(lm(smain_temp$value~smain_rh$value))
+anova(lm(smain_temp$value~smain_rh$value))
+
+plot(sample(rh_vals20$value, size = 10000) ~ sample(wet_vals20$value, size = 10000))
 ```
 
 
