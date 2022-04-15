@@ -6,9 +6,10 @@ library("reshape2")
 library("dplyr")
 library("ggplot2")
 library("tidyr")
+library("data.table")
 
 # import sensor file
-sensors <- data.frame(read.csv('ow_ns.csv'))
+sensors <- data.table(read.csv('ow_ns.csv'))
 names(sensors)[1] <- "datetime"
 
 #Convert to long form
@@ -25,13 +26,13 @@ head((test_var))
 
 test_out = strsplit(test_var, split = "_") ## split para_reg_site form
 
-para_frame <-
-  data.frame(matrix(unlist(test_out), ncol = 2, byrow = T)) ## convert to data frame
+para_table <-
+  data.table(matrix(unlist(test_out), ncol = 2, byrow = T)) ## convert to data frame
 #para_frame <- para_frame %>% separate(X1, c("temp", "rh", "wet"))
-names(para_frame) = c("para", "site")
+names(para_table) = c("para", "site")
 
 sensor2 <-
-  cbind(sensor_melt, para_frame) ## Combine melted data and site/para cols
+  cbind(sensor_melt, para_table) ## Combine melted data and site/para cols
 
 
 #Convert datetime
@@ -43,33 +44,45 @@ sensor2$time <-
          "%H:%M")
 
 #Convert date from char to date class
-date_frame <- data.frame(as.Date.character(sensor2$date))
-sensorFinal <- cbind(sensor2, date_frame)
+date_table <- data.table(as.Date.character(sensor2$date))
+sensorFinal <- cbind(sensor2, date_table)
 names(sensorFinal)[8] <- "Date"
 sensorFinal$date <- NULL
 
 #para_frame %>% separate(X1, c("temp", "rh", "wet"))
-rh_frame <- sensorFinal %>% select(para == "rh", value)
+#rh_table <- sensorFinal %>% select(para == "rh", value)
 
 
 #Replace NA vals with 0 then subset
 ##sensorFinal <- replace(sensorFinal, is.na(sensorFinal$value), 1)
-sensorFinal <- subset(sensorFinal, value != 0.1)
-sensorFinal[is.na(sensorFinal$value)] <- 0.1
-sensorFinal <- subset(sensorFinal, value != 0.1)
+# sensorFinal <- subset(sensorFinal, value != 0.1)
+# sensorFinal[is.na(sensorFinal$value)] <- 0.1
+# sensorFinal <- subset(sensorFinal, value != 0.1)
 
 
-##Values separated by parameter
+##Values separated by parameter and year
 rh_vals <-
   subset(sensorFinal,
          sensorFinal$para == "rh")
 temp_vals <-
   subset(sensorFinal,
          sensorFinal$para == "temp")
-
 wet_vals <-
   subset(sensorFinal,
          sensorFinal$para >= "wet")
+
+##Values separated temporal
+
+rh_vals20 <- subset(rh_vals, rh_vals$Date < "2021-03-26")
+#rh_vals20_05 <- rh_vals20[date >= "2021-05-01" & date <= "2021-05-26"]
+
+rh_vals21 <- subset(rh_vals, rh_vals$Date >= "2021-03-26")
+
+temp_vals20 <- subset(temp_vals, temp_vals$Date < "2021-03-26")
+temp_vals21 <- subset(temp_vals, temp_vals$Date >= "2021-03-26")
+
+wet_vals20 <- subset(wet_vals, wet_vals$Date < "2021-03-26")
+wet_vals21 <- subset(wet_vals, wet_vals$Date >= "2021-03-26")
 
 ## North sites
 n_main <- sensorFinal %>% filter(site == "n.main")
@@ -132,7 +145,9 @@ sg_wet <- subset(s_g, para == "wet")
 
 
 #ggplot(vals_2020, aes(site, value, color = site)) + geom_point()
-
+fit <- aov(value ~ site, data = temp_vals)
+qsummary(fit)
+boxplot(value ~ site, data = temp_vals)
 
 ggplot(sensors, aes(rh_n.main, wet_n.main)) + geom_point() + geom_smooth()
 lm(sensors$rh_n.main ~ sensors$wet_n.main)

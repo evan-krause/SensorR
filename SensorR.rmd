@@ -198,8 +198,8 @@ t.test(nmain_wet$value, smain_wet$value,
 
 ### Relative humidity as a function of temperature and wetness (additive - North Main site)
 ```{r}
-summary(lm(nmain_rh$value ~ nmain_temp$value + nmain_wet$value))
-anova(lm(nmain_temp$value ~ nmain_rh$value))
+TukeyHSD(aov(nmain_rh$value ~ nmain_temp$value + nmain_wet$value))
+anova(aov(nmain_temp$value ~ nmain_rh$value))
 
 ```
 
