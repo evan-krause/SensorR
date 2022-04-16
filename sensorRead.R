@@ -49,10 +49,6 @@ sensorFinal <- cbind(sensor2, date_table)
 names(sensorFinal)[8] <- "Date"
 sensorFinal$date <- NULL
 
-#para_frame %>% separate(X1, c("temp", "rh", "wet"))
-#rh_table <- sensorFinal %>% select(para == "rh", value)
-
-
 #Replace NA vals with 0 then subset
 ##sensorFinal <- replace(sensorFinal, is.na(sensorFinal$value), 1)
 # sensorFinal <- subset(sensorFinal, value != 0.1)
@@ -71,18 +67,38 @@ wet_vals <-
   subset(sensorFinal,
          sensorFinal$para >= "wet")
 
-##Values separated temporal
+## Temporal values 
 
 rh_vals20 <- subset(rh_vals, rh_vals$Date < "2021-03-26")
-#rh_vals20_05 <- rh_vals20[date >= "2021-05-01" & date <= "2021-05-26"]
+rh_vals20_may <- rh_vals20[rh_vals20$Date >= "2020-05-01" & rh_vals20$Date < "2020-05-25", ]
+rh_vals20_april <- rh_vals20[rh_vals20$Date >= "2020-04-01" & rh_vals20$Date < "2020-04-30", ]
 
 rh_vals21 <- subset(rh_vals, rh_vals$Date >= "2021-03-26")
+rh_vals21_march <- rh_vals21[rh_vals21$Date >= "2021-03-01" & rh_vals21$Date < "2021-03-31", ]
+rh_vals21_april <- rh_vals21[rh_vals21$Date >= "2021-04-01" & rh_vals21$Date < "2021-04-30", ]
+rh_vals21_may <- rh_vals21[rh_vals21$Date >= "2021-05-01" & rh_vals21$Date < "2021-05-30", ]
+rh_vals21_june <- rh_vals21[rh_vals21$Date >= "2021-06-01" & rh_vals21$Date < "2021-06-30", ]
 
 temp_vals20 <- subset(temp_vals, temp_vals$Date < "2021-03-26")
+temp_vals20_may <- temp_vals20[temp_vals20$Date >= "2020-05-01" & temp_vals20$Date < "2020-05-25", ]
+temp_vals20_april <- temp_vals20[temp_vals20$Date >= "2020-04-01" & temp_vals20$Date < "2020-04-30", ]
+
 temp_vals21 <- subset(temp_vals, temp_vals$Date >= "2021-03-26")
+temp_vals21_march <- temp_vals21[temp_vals21$Date >= "2021-03-01" & temp_vals21$Date < "2021-03-31", ]
+temp_vals21_april <- temp_vals21[temp_vals21$Date >= "2021-04-01" & temp_vals21$Date < "2021-04-30",] 
+temp_vals21_may <- temp_vals21[temp_vals21$Date >= "2021-05-01" & temp_vals21$Date < "2021-05-30", ]
+temp_vals21_june <- temp_vals21[temp_vals21$Date >= "2021-06-01" & temp_vals21$Date < "2021-06-30", ]
 
 wet_vals20 <- subset(wet_vals, wet_vals$Date < "2021-03-26")
+wet_vals20_may <- wet_vals20[wet_vals20$Date >= "2020-05-01" & wet_vals20$Date < "2020-05-25", ]
+wet_vals20_april <- wet_vals20[wet_vals20$Date >= "2020-04-01" & wet_vals20$Date < "2020-04-30", ]
+
 wet_vals21 <- subset(wet_vals, wet_vals$Date >= "2021-03-26")
+wet_vals21_march <- wet_vals21[wet_vals21$Date >= "2021-03-01" & wet_vals21$Date < "2021-03-31", ]
+wet_vals21_april <- wet_vals21[wet_vals21$Date >= "2021-04-01" & wet_vals21$Date < "2021-04-30", ]
+wet_vals21_may <- wet_vals21[wet_vals21$Date >= "2021-05-01" & wet_vals21$Date < "2021-05-30", ]
+wet_vals21_june <- wet_vals21[wet_vals21$Date >= "2021-06-01" & wet_vals21$Date < "2021-06-30", ]
+
 
 ## North sites
 n_main <- sensorFinal %>% filter(site == "n.main")
@@ -144,112 +160,45 @@ sg_rh <- subset(s_g, para == "rh")
 sg_wet <- subset(s_g, para == "wet")
 
 
-#ggplot(vals_2020, aes(site, value, color = site)) + geom_point()
-fit <- aov(value ~ site, data = temp_vals)
-qsummary(fit)
-boxplot(value ~ site, data = temp_vals)
+# Graphical explorations
 
-ggplot(sensors, aes(rh_n.main, wet_n.main)) + geom_point() + geom_smooth()
-lm(sensors$rh_n.main ~ sensors$wet_n.main)
+## 2020 by site per month
+ggplot(rh_vals20_april, aes(site, value)) + geom_boxplot()
+ggplot(rh_vals20_may, aes(site, value)) + geom_boxplot()
 
+ggplot(temp_vals20_april, aes(site, value)) + geom_boxplot()
+ggplot(temp_vals20_may, aes(site, value)) + geom_boxplot()
 
+ggplot(wet_vals20_april, aes(site, value)) + geom_boxplot()
+ggplot(wet_vals20_may, aes(site, value)) + geom_boxplot()
 
-sensors$rh_n.main ~ sensors$wet_n.main
+## 2021 by site per month
+ggplot(rh_vals21_march, aes(site, value)) + geom_boxplot()
+ggplot(rh_vals21_april, aes(site, value)) + geom_boxplot()
+ggplot(rh_vals21_may, aes(site, value)) + geom_boxplot()
+ggplot(rh_vals21_june, aes(site, value)) + geom_boxplot()
 
-lm_nmain = lm(sensors$rh_n.main ~ sensors$wet_n.main)
-lmnmain = lm(nmain_rh$value ~ nmain_wet$value)
-summary(lm_nmain)
-summary(lmnmain)
-anova(lmnmain)
-plot(lm_nmain)
-anova(lm_nmain)
-nmain_resid <- residuals(lm_nmain)
-hist(nmain_resid)
+ggplot(temp_vals21_march, aes(site, value)) + geom_boxplot()
+ggplot(temp_vals21_april, aes(site, value)) + geom_boxplot()
+ggplot(temp_vals21_may, aes(site, value)) + geom_boxplot()
+ggplot(temp_vals21_june, aes(site, value)) + geom_boxplot()
 
-lm_smain = lm(sensors$rh_s.main ~ sensors$wet_s.main)
-summary.lm(lm_smain)
-plot(lm_smain)
-anova(lm_smain)
-smain_resid <- residuals(lm_smain)
-hist(smain_resid)
-
-hist(
-  sg_temp$value,
-  data = subset(
-    sg_temp,
-    sg_temp$as.Date.character.sensor2.date. >= "2021-03-26"
-  ),
-  main = "2021 South-G temperature dist"
-)
-# hist(sensors$rh_n_m)
-# hist(sensors$rh_n_x)
-# 
-# hist(sensors$wet_n_e)
-# hist(sensors$wet_n_m)
-#hist(sensorFinal$value)
-hist(temp_vals$value) 
-hist(rh_vals$value) 
-hist(wet_vals$value)
-
-lm(temp_vals$value ~ rh_vals$value)
-
-# Additive linear model of RH as func of wetness + temperature
-rh_wet_templm <- lm(rh_vals$value ~ wet_vals$value + temp_vals$value)
-anova(lm(rh_vals$value ~ wet_vals$value + temp_vals$value))
-summary(rh_wet_templm)
-rh_wetTempresidual <- resid(lm(temp_vals$value ~ rh_vals$value)) 
-hist(rh_wetTempresidual)
-shapiro.test(rh_wetTempresidual) 
-AIC(rh_wet_templm)
-
-shapiro.test(sample(rh_wetTempresidual, size = 5000))
+ggplot(wet_vals21_march, aes(site, value)) + geom_boxplot()
+ggplot(wet_vals21_april, aes(site, value)) + geom_boxplot()
+ggplot(wet_vals21_may, aes(site, value)) + geom_boxplot()
+ggplot(wet_vals21_june, aes(site, value)) + geom_boxplot()
 
 
-plot(rh_wet_templm)
-
-
-plot(
-   ne_temp$value ~ ne_rh$value,
-   data = subset(
-     sensorFinal,
-     sensorFinal$as.Date.character.sensor2.date. >= "2021-03-26"
-   ),
-   main = "2021 North-E RH by Temperature",
-   pch = 16,
-   col = adjustcolor("black", 0.1)
- )
- #
- # plot(n_main$value,
- #     data = subset(sensor2, n_main$value == "rh"),
- #     pch = 16,
-#     col = adjustcolor("black", 0.1))
-# 
- boxplot(nmain_temp$value,
-         ne_temp$value,
-         nx_temp$value,
-         smain_temp$value)
-# hist(sensors$temp_n_main)
-# 
-t.test(nmain_temp$value, nx_temp$value,
-       data = subset(sensorFinal,
-       sensorFinal$Date <= "2021-03-26")
-)
-
-t.test(
-  nm_rh$value, sg_rh$value,
+t.test(nmain_temp$value,
+       nx_temp$value,
+       data = subset(sensorFinal, sensorFinal$Date <= "2021-03-26"))
+ 
+t.test(nm_rh$value,
+       sg_rh$value,
        data = subset(sensorFinal, sensorFinal$Date <= "2021-03-26")) ## Woo!
-
-t.test(
-  nm_wet$value, sg_wet$value,
-  data = subset(sensorFinal, sensorFinal$Date <= "2021-03-26")) ## Woo!
-
-
-boxplot(nmain_rh$value, smain_rh$value,
-        data = subset(sensorFinal,
-                      sensorFinal$as.Date.character.sensor2.date. >= "2021-03-26"),
-        main = "2020-2021 RH values at North and South main sites",
-        names = c("North main", "South main"),
-        ylab = "Relative humidity (%)")
-
+ 
+t.test(nm_wet$value,
+       sg_wet$value,
+       data = subset(sensorFinal, sensorFinal$Date <= "2021-03-26")) ## Woo!
 
         

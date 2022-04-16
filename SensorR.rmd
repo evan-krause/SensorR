@@ -6,7 +6,7 @@ code_folding: "hide"
 ---
 
 ```{r include = FALSE}
-knitr::opts_chunk$set(echo=FALSE)
+knitr::opts_chunk$set(echo = FALSE)
 
 ```
 
