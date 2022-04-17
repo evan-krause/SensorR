@@ -1,0 +1,29 @@
+---
+title: "infection_events"
+output: html_document
+date: '2022-04-17'
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r}
+library("reshape2")
+library("dplyr")
+library("ggplot2")
+library("tidyr")
+library("psych")
+library("data.table")
+```
+
+```{r}
+infect <- data.table(read.csv("Infection Event Summary_4-28.csv"))
+sensors <- data.table(rad.csv("sensors.csv"))
+names(infect)[1:6] = c("date", "infect_events", "avg_wet_hours_temp", "wet_hours", "humid_hours(90+)", "rain_amt_in")
+```
+
+```{r}
+infect_days <- infect %>% filter(infect$infect_events == "yes" | infect$infect_events == "combined")
+```
+

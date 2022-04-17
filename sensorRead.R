@@ -46,11 +46,47 @@ sensor2$time <-
 #Convert date from char to date class
 date_table <- data.table(as.Date.character(sensor2$date))
 sensorFinal <- cbind(sensor2, date_table)
-names(sensorFinal)[8] <- "Date"
+names(sensorFinal)[8] <- "date"
 sensorFinal$date <- NULL
 
+temp_table <- sensorFinal %>% filter(para == "temp")
+names(temp_table)[3] <- "temp"
+
+rh_table <- sensorFinal %>% filter(para == "rh")
+names(rh_table)[3] <- "rh"
+
+wet_table <- sensorFinal %>% filter(para == "wet")
+names(wet_table)[3] <- "wet"
+
+
+rh_table <- arrange(rh_table, desc(site))
+temp_table <- arrange(temp_table, desc(site))
+wet_table <- arrange(wet_table, desc(site))
+
+temp_table$para <- NULL
+temp_table$datetime <- NULL
+temp_table$variable <- NULL
+rh_table$para <- NULL
+rh_table$datetime <- NULL
+rh_table$variable <- NULL
+rh_table$time <- NULL
+rh_table$Date <- NULL
+rh_table$site <- NULL
+wet_table$para <- NULL
+wet_table$datetime <- NULL
+wet_table$variable <- NULL
+wet_table$time <- NULL
+wet_table$Date <- NULL
+wet_table$site <- NULL
+
+working <- cbind(temp_table, rh_table, wet_table)
+
+
+
+write.csv(working, file = "sensors_wd.csv")
+
 #Replace NA vals with 0 then subset
-##sensorFinal <- replace(sensorFinal, is.na(sensorFinal$value), 1)
+#sensorFinal <- replace(sensorFinal, is.na(sensorFinal$value), 1)
 # sensorFinal <- subset(sensorFinal, value != 0.1)
 # sensorFinal[is.na(sensorFinal$value)] <- 0.1
 # sensorFinal <- subset(sensorFinal, value != 0.1)
@@ -93,12 +129,20 @@ wet_vals20 <- subset(wet_vals, wet_vals$Date < "2021-03-26")
 wet_vals20_may <- wet_vals20[wet_vals20$Date >= "2020-05-01" & wet_vals20$Date < "2020-05-25", ]
 wet_vals20_april <- wet_vals20[wet_vals20$Date >= "2020-04-01" & wet_vals20$Date < "2020-04-30", ]
 
-wet_vals21 <- subset(wet_vals, wet_vals$Date >= "2021-03-26")
-wet_vals21_march <- wet_vals21[wet_vals21$Date >= "2021-03-01" & wet_vals21$Date < "2021-03-31", ]
-wet_vals21_april <- wet_vals21[wet_vals21$Date >= "2021-04-01" & wet_vals21$Date < "2021-04-30", ]
-wet_vals21_may <- wet_vals21[wet_vals21$Date >= "2021-05-01" & wet_vals21$Date < "2021-05-30", ]
-wet_vals21_june <- wet_vals21[wet_vals21$Date >= "2021-06-01" & wet_vals21$Date < "2021-06-30", ]
 
+wet_vals21 <- subset(wet_vals, wet_vals$Date >= "2021-03-26")
+wet_vals21_march <-
+  wet_vals21[wet_vals21$Date >= "2021-03-01" &
+               wet_vals21$Date < "2021-03-31",]
+wet_vals21_april <-
+  wet_vals21[wet_vals21$Date >= "2021-04-01" &
+               wet_vals21$Date < "2021-04-30",]
+wet_vals21_may <-
+  wet_vals21[wet_vals21$Date >= "2021-05-01" &
+               wet_vals21$Date < "2021-05-30",]
+wet_vals21_june <-
+  wet_vals21[wet_vals21$Date >= "2021-06-01" &
+               wet_vals21$Date < "2021-06-30",]
 
 ## North sites
 n_main <- sensorFinal %>% filter(site == "n.main")
@@ -159,10 +203,9 @@ sg_temp <- subset(s_g, para == "temp")
 sg_rh <- subset(s_g, para == "rh")
 sg_wet <- subset(s_g, para == "wet")
 
-
 # Graphical explorations
 
-## 2020 by site per month
+## 2020 by site per month boxplots
 ggplot(rh_vals20_april, aes(site, value)) + geom_boxplot()
 ggplot(rh_vals20_may, aes(site, value)) + geom_boxplot()
 
@@ -172,7 +215,7 @@ ggplot(temp_vals20_may, aes(site, value)) + geom_boxplot()
 ggplot(wet_vals20_april, aes(site, value)) + geom_boxplot()
 ggplot(wet_vals20_may, aes(site, value)) + geom_boxplot()
 
-## 2021 by site per month
+## 2021 by site per month boxplots
 ggplot(rh_vals21_march, aes(site, value)) + geom_boxplot()
 ggplot(rh_vals21_april, aes(site, value)) + geom_boxplot()
 ggplot(rh_vals21_may, aes(site, value)) + geom_boxplot()
@@ -189,14 +232,22 @@ ggplot(wet_vals21_may, aes(site, value)) + geom_boxplot()
 ggplot(wet_vals21_june, aes(site, value)) + geom_boxplot()
 
 
-t.test(nmain_temp$value,
-       nx_temp$value,
-       data = subset(sensorFinal, sensorFinal$Date <= "2021-03-26"))
- 
+
+ggplot(sensorFinal[sensorFinal$Date == "2021-05-02",], 
+       aes(time, value, color = site, shape = para)) + 
+  geom_jitter(alpha = 0.9) + labs(title = "CSO parameters May 5th, 2021 (0:00-23:55)")
+
+
+t.test(
+  nmain_temp$value,
+  nx_temp$value,
+  data = subset(sensorFinal, sensorFinal$Date <= "2021-03-26")
+)
+
 t.test(nm_rh$value,
        sg_rh$value,
        data = subset(sensorFinal, sensorFinal$Date <= "2021-03-26")) ## Woo!
- 
+
 t.test(nm_wet$value,
        sg_wet$value,
        data = subset(sensorFinal, sensorFinal$Date <= "2021-03-26")) ## Woo!
