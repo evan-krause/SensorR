@@ -2,8 +2,10 @@
 title: "Cold Springs Orchard 2021 Infection period analysis"
 author: "Evan Krause"
 output:
-  pdf_document: default
-  html_document: default
+  html_document:
+    theme: cosmo
+    toc: true
+    toc_float: true
 date: '2022-04-17'
 code_folding: hide
 ---
@@ -60,31 +62,31 @@ s_y <- sensors %>% filter(site == "s.y")
 
 ## March 28th - 29th 
 
-```{r}
+```{r, fig.width= 14, fig.height=10}
 ggplot(sensors[date >= "2021-03-28" & date <= "2021-03-29", ],
        aes(date, temp)) +
   geom_boxplot(alpha = 0.5) + 
   labs(title = "CSO site temperatures by day March 28th - 29th, 2021",
        y = "Temperature degF") + 
-  facet_grid(~ site, margins = TRUE)
+  facet_grid(~ site)
 
 ```
 
-```{r}
+```{r, fig.width= 14, fig.height=10}
 ggplot(sensors[date >= "2021-03-28" & date <= "2021-03-29", ],
        aes(date, rh)) +
   geom_boxplot(alpha = 0.5) + 
-  labs(title = "CSO site Relative humidity by day March 28th - 29th, 2021",
+  labs(title = "CSO site Relative humidity March 28th - 29th, 2021",
        y = "Relative humidity (%)") + 
   facet_grid(~ site)
 
 ```
 
-```{r}
+```{r, fig.width= 14, fig.height=10}
 ggplot(sensors[date >= "2021-03-28" & date <= "2021-03-29", ],
        aes(date, wet)) +
   geom_boxplot(alpha = 0.5) + 
-  labs(title = "CSO site Leaf wetness by day April 28th - 30th, 2021",
+  labs(title = "CSO site Leaf wetness by day April 28th - 29th, 2021",
        y = "Temperature degF") + 
   facet_grid(~ site)
 ```
@@ -93,7 +95,7 @@ ggplot(sensors[date >= "2021-03-28" & date <= "2021-03-29", ],
 
 ## April 15th - 17th
 
-```{r, fig.height=5}
+```{r, fig.width= 17, fig.height=10}
 ggplot(sensors[date >= "2021-04-15" & date <= "2021-04-17", ],
        aes(date, temp)) +
   geom_boxplot(alpha = 0.5) + 
@@ -103,7 +105,7 @@ ggplot(sensors[date >= "2021-04-15" & date <= "2021-04-17", ],
 
 ```
 
-```{r}
+```{r, fig.width= 17, fig.height=10}
 ggplot(sensors[date >= "2021-04-15" & date <= "2021-04-17", ],
        aes(date, rh)) +
   geom_boxplot(alpha = 0.5) + 
@@ -113,7 +115,7 @@ ggplot(sensors[date >= "2021-04-15" & date <= "2021-04-17", ],
 
 ```
 
-```{r}
+```{r, fig.width= 17, fig.height=10}
 ggplot(sensors[date >= "2021-04-15" & date <= "2021-04-17", ],
        aes(date, wet)) +
   geom_boxplot(alpha = 0.5) + 
@@ -126,7 +128,7 @@ ggplot(sensors[date >= "2021-04-15" & date <= "2021-04-17", ],
 
 ## April 28th - 30th
 
-```{r}
+```{r, fig.width= 17, fig.height=10}
 ggplot(sensors[date >= "2021-04-28" & date <= "2021-04-30", ],
        aes(date, temp)) +
   geom_boxplot(alpha = 0.5) + 
@@ -135,7 +137,7 @@ ggplot(sensors[date >= "2021-04-28" & date <= "2021-04-30", ],
   facet_grid(~ site)
 ```
 
-```{r}
+```{r, fig.width= 17, fig.height=10}
 ggplot(sensors[date >= "2021-04-28" & date <= "2021-04-30", ],
        aes(date, rh)) +
   geom_boxplot(alpha = 0.5) + 
@@ -145,7 +147,7 @@ ggplot(sensors[date >= "2021-04-28" & date <= "2021-04-30", ],
 
 ```
 
-```{r}
+```{r, fig.width= 17, fig.height=10}
 ggplot(sensors[date >= "2021-04-28" & date <= "2021-04-30", ],
        aes(date, wet)) +
   geom_boxplot(alpha = 0.5) + 
@@ -158,7 +160,7 @@ ggplot(sensors[date >= "2021-04-28" & date <= "2021-04-30", ],
 
 ## May 2nd - 5th
 
-```{r}
+```{r, fig.width= 20, fig.height=12}
 ggplot(sensors[date >= "2021-05-02" & date <= "2021-05-05", ],
        aes(date, temp)) +
   geom_boxplot(alpha = 0.5) + 
@@ -167,7 +169,7 @@ ggplot(sensors[date >= "2021-05-02" & date <= "2021-05-05", ],
   facet_grid(~ site)
 ```
 
-```{r}
+```{r, fig.width= 20, fig.height=12}
 ggplot(sensors[date >= "2021-05-02" & date <= "2021-05-05", ],
        aes(date, rh)) +
   geom_boxplot(alpha = 0.5) + 
@@ -177,8 +179,8 @@ ggplot(sensors[date >= "2021-05-02" & date <= "2021-05-05", ],
 
 ```
 
-```{r}
-ggplot(sensors[date >= "2021-05-02" & date <= "2021-05-02", ],
+```{r, fig.width= 20, fig.height=12}
+ggplot(sensors[date >= "2021-05-02" & date <= "2021-05-05", ],
        aes(date, wet)) +
   geom_boxplot(alpha = 0.5) + 
   labs(title = "CSO site Leaf Wetness by day May 2nd - 5th, 2021",
@@ -188,10 +190,11 @@ ggplot(sensors[date >= "2021-05-02" & date <= "2021-05-02", ],
 
 \newpage
 
+
 # ANOVA and Post-Hoc
 ## By Infection period {.tabset}
 
-### March 28th - 29th
+### March 28th - 29th {.tabset}
 
 #### Temperature
 ```{r}
@@ -203,8 +206,11 @@ hist(temp_resid_03_28,
      xlab = "Residuals")
 qqnorm(temp_resid_03_28)
 TukeyHSD(temp_fit_03_28, ordered = TRUE)
+```
+```{r, fig.height=12}
 plot(TukeyHSD(temp_fit_03_28, ordered = TRUE))
 ```
+
 
 \newpage
 
@@ -219,8 +225,11 @@ hist(rh_fit_resid_03_28,
      xlab = "Residuals")
 qqnorm(rh_fit_resid_03_28)
 TukeyHSD(rh_fit_03_28, ordered = TRUE)
+```
+```{r, fig.height=12}
 plot(TukeyHSD(rh_fit_03_28, ordered = TRUE))
 ```
+
 
 \newpage
 
@@ -235,12 +244,18 @@ hist(wet_fit_resid_03_28,
      xlab = "Residuals")
 qqnorm(wet_fit_resid_03_28)
 TukeyHSD(wet_fit_03_28, ordered = TRUE)
+```
+```{r, fig.height=12}
 plot(TukeyHSD(wet_fit_03_28, ordered = TRUE))
 ```
 
+
 \newpage
 
-### April 15th - 17th
+
+
+
+### April 15th - 17th {.tabset}
 
 #### Temperature
 ```{r}
@@ -252,8 +267,11 @@ hist(temp_resid_04_15,
      xlab = "Residuals")
 qqnorm(temp_resid_04_15)
 TukeyHSD(temp_fit_04_15, ordered = TRUE)
+```
+```{r, fig.height=12}
 plot(TukeyHSD(temp_fit_04_15, ordered = TRUE))
 ```
+
 
 \newpage
 
@@ -268,8 +286,12 @@ hist(rh_resid_04_15,
      xlab = "Residuals")
 qqnorm(rh_resid_04_15)
 TukeyHSD(rh_fit_04_15, ordered = TRUE)
+
+```
+```{r, fig.height=12}
 plot(TukeyHSD(rh_fit_04_15, ordered = TRUE))
 ```
+
 
 \newpage
 
@@ -284,12 +306,17 @@ hist(wet_resid_04_15,
      xlab = "Residuals")
 qqnorm(wet_resid_04_15)
 TukeyHSD(wet_fit_04_15, ordered = TRUE)
+
+```
+```{r, fig.height=12}
 plot(TukeyHSD(wet_fit_04_15, ordered = TRUE))
 ```
 
+
 \newpage
 
-### April 28th - 30th
+
+### April 28th - 30th {.tabset}
 
 #### Temperature
 ```{r}
@@ -301,8 +328,12 @@ hist(temp_resid_04_28,
      xlab = "Residuals")
 qqnorm(temp_resid_04_28)
 TukeyHSD(temp_fit_04_28, ordered = TRUE)
+
+```
+```{r, fig.height=12}
 plot(TukeyHSD(temp_fit_04_28, ordered = TRUE))
 ```
+
 
 \newpage
 
@@ -317,8 +348,12 @@ hist(rh_resid_04_28,
      xlab = "Residuals")
 qqnorm(rh_resid_04_28)
 TukeyHSD(rh_fit_04_28, ordered = TRUE)
+
+```
+```{r, fig.height=12}
 plot(TukeyHSD(rh_fit_04_28, ordered = TRUE))
 ```
+
 
 \newpage
 
@@ -333,13 +368,17 @@ hist(wet_resid_04_28,
      xlab = "Residuals")
 qqnorm(wet_resid_04_28)
 TukeyHSD(wet_fit_04_28, ordered = TRUE)
+
+```
+```{r, fig.height=12}
 plot(TukeyHSD(wet_fit_04_28, ordered = TRUE))
 ```
 
+
 \newpage
 
-### March 2nd - 5th
 
+### March 2nd - 5th {.tabset}
 
 #### Temperature
 ```{r}
@@ -351,8 +390,12 @@ hist(temp_resid_05_02,
      xlab = "Residuals")
 qqnorm(temp_resid_05_02)
 TukeyHSD(temp_fit_05_02, ordered = TRUE)
+
+```
+```{r, fig.height=12}
 plot(TukeyHSD(temp_fit_05_02, ordered = TRUE))
 ```
+
 
 \newpage
 
@@ -367,8 +410,12 @@ hist(rh_resid_05_02,
      xlab = "Residuals")
 qqnorm(rh_resid_05_02)
 TukeyHSD(rh_fit_05_02, ordered = TRUE)
+
+```
+```{r, fig.height=12}
 plot(TukeyHSD(rh_fit_05_02, ordered = TRUE))
 ```
+
 
 \newpage
 
@@ -383,13 +430,21 @@ hist(wet_resid_05_02,
      xlab = "Residuals")
 qqnorm(wet_resid_05_02)
 TukeyHSD(wet_fit_05_02, ordered = TRUE)
+
+```
+```{r, fig.height=12}
 plot(TukeyHSD(wet_fit_05_02, ordered = TRUE))
 ```
 
+
 \newpage
 
+
 ## By Month {.tabset}
-### March 2021 Temperature by site
+
+### March 2021 {.tabset}
+
+#### Temperature 
 
 ```{r}
 temp_fit_03 <- aov(temp~site, data = subset(sensors, date >= "2021-03-01" & date <= "2021-03-31"))
@@ -400,12 +455,16 @@ hist(temp_resid_03,
      xlab = "Residuals")
 qqnorm(temp_resid_03)
 TukeyHSD(temp_fit_03, ordered = TRUE)
+
+```
+```{r, fig.height=12}
 plot(TukeyHSD(temp_fit_03, ordered = TRUE))
 ```
 
+
 \newpage
 
-### March 2021 Relative Humidity by Site
+#### Relative Humidity
 
 ```{r}
 rh_fit_03 <- aov(rh~site, data = subset(sensors, date >= "2021-03-01" & date <= "2021-03-31"))
@@ -416,12 +475,16 @@ hist(rh_fit_resid_03,
      xlab = "Residuals")
 qqnorm(rh_fit_resid_03)
 TukeyHSD(rh_fit_03, ordered = TRUE)
+
+```
+```{r, fig.height=12}
 plot(TukeyHSD(rh_fit_03, ordered = TRUE))
 ```
 
+
 \newpage
 
-### March 2021 Leaf Wetness by Site
+#### Leaf Wetness
 
 ```{r}
 wet_fit_03 <- aov(wet~site, data = subset(sensors, date >= "2021-03-01" & date <= "2021-03-31"))
@@ -432,12 +495,19 @@ hist(wet_fit_resid_03,
      xlab = "Residuals")
 qqnorm(wet_fit_resid_03)
 TukeyHSD(wet_fit_03, ordered = TRUE)
+
+```
+```{r, fig.height=12}
 plot(TukeyHSD(wet_fit_03, ordered = TRUE))
 ```
 
+
 \newpage
 
-### April 2021 Temperature by site
+
+### April 2021 {.tabset}
+
+#### Temperature
 
 ```{r}
 temp_fit_04 <- aov(temp~site, data = subset(sensors, date >= "2021-04-01" & date <= "2021-04-30"))
@@ -448,12 +518,16 @@ hist(temp_resid_04,
      xlab = "Residuals")
 qqnorm(temp_resid_04)
 TukeyHSD(temp_fit_04, ordered = TRUE)
+
+```
+```{r, fig.height=12}
 plot(TukeyHSD(temp_fit_04, ordered = TRUE))
 ```
 
+
 \newpage
 
-### April 2021 Relative Humidity by Site
+#### Relative Humidity
 
 ```{r}
 rh_fit_04 <- aov(rh~site, data = subset(sensors, date >= "2021-05-01" & date <= "2021-05-30"))
@@ -464,12 +538,15 @@ hist(rh_fit_resid_04,
      xlab = "Residuals")
 qqnorm(rh_fit_resid_04)
 TukeyHSD(rh_fit_04, ordered = TRUE)
+```
+```{r, fig.height=12}
 plot(TukeyHSD(rh_fit_04, ordered = TRUE))
 ```
 
+
 \newpage
 
-### April 2021 Leaf Wetness by Site
+#### Leaf Wetness
 
 ```{r}
 wet_fit_04 <- aov(wet~site, data = subset(sensors, date >= "2021-04-01" & date <= "2021-04-30"))
@@ -480,13 +557,20 @@ hist(wet_fit_resid_04,
      xlab = "Residuals")
 qqnorm(wet_fit_resid_04)
 TukeyHSD(wet_fit_04, ordered = TRUE)
+
+```
+```{r, fig.height=12}
 plot(TukeyHSD(wet_fit_04, ordered = TRUE))
 ```
+
 
 \newpage
 
 
-### May 2021 Temperature by site
+
+### May 2021 {.tabset} 
+
+####Temperature
 
 ```{r}
 temp_fit <- aov(temp~site, data = subset(sensors, date >= "2021-05-01" & date <= "2021-05-30"))
@@ -496,12 +580,16 @@ hist(temp_resid,
      main = "May 2021 temperature anova",
      xlab = "Residuals")
 TukeyHSD(temp_fit, ordered = TRUE)
+
+```
+```{r, fig.height=12}
 plot(TukeyHSD(temp_fit, ordered = TRUE))
 ```
 
+
 \newpage
 
-### May 2021 Relative Humidity by Site
+#### Relative Humidity
 
 ```{r}
 rh_fit_05 <- aov(rh~site, data = subset(sensors, date >= "2021-05-01" & date <= "2021-05-30"))
@@ -511,12 +599,16 @@ hist(rh_fit_05_resid,
      main = "May 2021 Relative humidity anova",
      xlab = "Residuals")
 TukeyHSD(rh_fit_05, ordered = TRUE)
+
+```
+```{r, fig.height=12}
 plot(TukeyHSD(rh_fit_05, ordered = TRUE))
 ```
 
+
 \newpage
 
-### May 2021 Leaf Wetness by Site
+#### Leaf Wetness
 
 ```{r}
 wet_fit_05 <- aov(wet~site, data = subset(sensors, date >= "2021-05-01" & date <= "2021-05-30"))
@@ -526,5 +618,8 @@ hist(wet_fit_05_resid,
      main = "May 2021 Relative humidity anova",
      xlab = "Residuals")
 TukeyHSD(wet_fit_05, ordered = TRUE)
+```
+```{r, fig.height=12}
 plot(TukeyHSD(wet_fit_05, ordered = TRUE))
 ```
+
