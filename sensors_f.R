@@ -4,8 +4,10 @@ library("ggplot2")
 library("tidyr")
 library("data.table")
 
-sensors <- data.table(read.csv("sensors.csv"))
-
+sensors <- data.table(read.csv("sensors_wd.csv"))
+sensors$date.1 <- NULL
+sensors$date.2 <- NULL
+sensors <- sensors %>% select(X, date, time, site, temp, rh, wet)
 
 ##Values separated by parameter and year
 rh_vals <-

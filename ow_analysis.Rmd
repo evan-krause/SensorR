@@ -56,9 +56,9 @@ s_g <- sensors %>% filter(site == "s.g")
 s_y <- sensors %>% filter(site == "s.y")
 ```
 
-# 2021 NEWA infection periods graphical exploration
+# 2021 NEWA infection periods graphical exploration {.tabset}
 
-## March 28th - 29th
+## March 28th - 29th 
 
 ```{r}
 ggplot(sensors[date >= "2021-03-28" & date <= "2021-03-29", ],
@@ -93,7 +93,7 @@ ggplot(sensors[date >= "2021-03-28" & date <= "2021-03-29", ],
 
 ## April 15th - 17th
 
-```{r}
+```{r, fig.height=5}
 ggplot(sensors[date >= "2021-04-15" & date <= "2021-04-17", ],
        aes(date, temp)) +
   geom_boxplot(alpha = 0.5) + 
@@ -189,7 +189,7 @@ ggplot(sensors[date >= "2021-05-02" & date <= "2021-05-02", ],
 \newpage
 
 # ANOVA and Post-Hoc
-## By Infection period
+## By Infection period {.tabset}
 
 ### March 28th - 29th
 
@@ -388,7 +388,7 @@ plot(TukeyHSD(wet_fit_05_02, ordered = TRUE))
 
 \newpage
 
-## By Month
+## By Month {.tabset}
 ### March 2021 Temperature by site
 
 ```{r}
