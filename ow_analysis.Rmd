@@ -530,7 +530,7 @@ plot(TukeyHSD(temp_fit_04, ordered = TRUE))
 #### Relative Humidity
 
 ```{r}
-rh_fit_04 <- aov(rh~site, data = subset(sensors, date >= "2021-05-01" & date <= "2021-05-30"))
+rh_fit_04 <- aov(rh~site, data = subset(sensors, date >= "2021-04-01" & date <= "2021-04-30"))
 anova(rh_fit_04)
 rh_fit_resid_04 <- resid(rh_fit_04)
 hist(rh_fit_resid_04,
@@ -570,7 +570,7 @@ plot(TukeyHSD(wet_fit_04, ordered = TRUE))
 
 ### May 2021 {.tabset} 
 
-####Temperature
+#### Temperature
 
 ```{r}
 temp_fit <- aov(temp~site, data = subset(sensors, date >= "2021-05-01" & date <= "2021-05-30"))
