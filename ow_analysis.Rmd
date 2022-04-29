@@ -60,7 +60,17 @@ s_y <- sensors %>% filter(site == "s.y")
 
 # 2021 NEWA infection periods graphical exploration {.tabset}
 
-## March 28th - 29th 
+## By infection period {.tabset}
+
+### March 28th - 29th {.tabset}
+
+#### Temperature 
+
+```{r}
+ggplot(sensors[date >= "2021-03-28" & date <= "2021-03-29", ],
+       aes(time, temp, color = site)) + 
+  geom_point(alpha = 0.5)
+```
 
 ```{r, fig.width= 14, fig.height=10}
 ggplot(sensors[date >= "2021-03-28" & date <= "2021-03-29", ],
@@ -72,6 +82,14 @@ ggplot(sensors[date >= "2021-03-28" & date <= "2021-03-29", ],
 
 ```
 
+#### Relative Humidity
+
+```{r}
+ggplot(sensors[date >= "2021-03-28" & date <= "2021-03-29", ],
+       aes(time, rh, color = site)) + 
+  geom_jitter(alpha = 0.5)
+```
+
 ```{r, fig.width= 14, fig.height=10}
 ggplot(sensors[date >= "2021-03-28" & date <= "2021-03-29", ],
        aes(date, rh)) +
@@ -80,6 +98,14 @@ ggplot(sensors[date >= "2021-03-28" & date <= "2021-03-29", ],
        y = "Relative humidity (%)") + 
   facet_grid(~ site)
 
+```
+
+#### Leaf Wetness
+
+```{r}
+ggplot(sensors[date >= "2021-03-28" & date <= "2021-03-29", ],
+       aes(time, wet, color = site)) + 
+  geom_jitter(alpha = 0.5)
 ```
 
 ```{r, fig.width= 14, fig.height=10}
@@ -93,7 +119,15 @@ ggplot(sensors[date >= "2021-03-28" & date <= "2021-03-29", ],
 
 \newpage
 
-## April 15th - 17th
+### April 15th - 17th {.tabset}
+
+#### Temperature
+
+```{r}
+ggplot(sensors[date >= "2021-04-15" & date <= "2021-04-17", ],
+       aes(time, temp, color = site)) + 
+  geom_jitter(alpha = 0.5)
+```
 
 ```{r, fig.width= 17, fig.height=10}
 ggplot(sensors[date >= "2021-04-15" & date <= "2021-04-17", ],
@@ -103,6 +137,13 @@ ggplot(sensors[date >= "2021-04-15" & date <= "2021-04-17", ],
        y = "Temperature degF") + 
   facet_grid(~ site)
 
+```
+
+#### Relative Humidity
+```{r}
+ggplot(sensors[date >= "2021-04-15" & date <= "2021-04-17", ],
+       aes(time, rh, color = site)) + 
+  geom_jitter(alpha = 0.5)
 ```
 
 ```{r, fig.width= 17, fig.height=10}
@@ -115,6 +156,14 @@ ggplot(sensors[date >= "2021-04-15" & date <= "2021-04-17", ],
 
 ```
 
+#### Leaf Wetness
+
+```{r}
+ggplot(sensors[date >= "2021-04-15" & date <= "2021-04-17", ],
+       aes(time, wet, color = site)) + 
+  geom_jitter(alpha = 0.5)
+```
+
 ```{r, fig.width= 17, fig.height=10}
 ggplot(sensors[date >= "2021-04-15" & date <= "2021-04-17", ],
        aes(date, wet)) +
@@ -126,7 +175,15 @@ ggplot(sensors[date >= "2021-04-15" & date <= "2021-04-17", ],
 
 \newpage
 
-## April 28th - 30th
+### April 28th - 30th {.tabset}
+
+#### Temperature
+
+```{r}
+ggplot(sensors[date >= "2021-04-28" & date <= "2021-04-30", ],
+       aes(time, temp, color = site)) + 
+  geom_jitter(alpha = 0.5)
+```
 
 ```{r, fig.width= 17, fig.height=10}
 ggplot(sensors[date >= "2021-04-28" & date <= "2021-04-30", ],
@@ -135,6 +192,14 @@ ggplot(sensors[date >= "2021-04-28" & date <= "2021-04-30", ],
   labs(title = "CSO site temperatures by day April 28th - 30th, 2021",
        y = "Temperature degF") + 
   facet_grid(~ site)
+```
+
+#### Relative Humidity
+
+```{r}
+ggplot(sensors[date >= "2021-04-28" & date <= "2021-04-30", ],
+       aes(time, rh, color = site)) + 
+  geom_jitter(alpha = 0.5)
 ```
 
 ```{r, fig.width= 17, fig.height=10}
@@ -147,6 +212,14 @@ ggplot(sensors[date >= "2021-04-28" & date <= "2021-04-30", ],
 
 ```
 
+#### Leaf Wetness
+
+```{r}
+ggplot(sensors[date >= "2021-04-28" & date <= "2021-04-30", ],
+       aes(time, wet, color = site)) + 
+  geom_jitter(alpha = 0.5)
+```
+
 ```{r, fig.width= 17, fig.height=10}
 ggplot(sensors[date >= "2021-04-28" & date <= "2021-04-30", ],
        aes(date, wet)) +
@@ -158,7 +231,14 @@ ggplot(sensors[date >= "2021-04-28" & date <= "2021-04-30", ],
 
 \newpage
 
-## May 2nd - 5th
+### May 2nd - 5th {.tabset} 
+
+#### Temperature
+```{r}
+ggplot(sensors[date >= "2021-05-02" & date <= "2021-05-05", ],
+       aes(time, temp, color = site)) + 
+  geom_jitter(alpha = 0.5)
+```
 
 ```{r, fig.width= 20, fig.height=12}
 ggplot(sensors[date >= "2021-05-02" & date <= "2021-05-05", ],
@@ -169,6 +249,14 @@ ggplot(sensors[date >= "2021-05-02" & date <= "2021-05-05", ],
   facet_grid(~ site)
 ```
 
+#### Relative Humidity
+
+```{r}
+ggplot(sensors[date >= "2021-05-02" & date <= "2021-05-02", ],
+       aes(time, rh, color = site)) + 
+  geom_jitter(alpha = 0.5)
+```
+
 ```{r, fig.width= 20, fig.height=12}
 ggplot(sensors[date >= "2021-05-02" & date <= "2021-05-05", ],
        aes(date, rh)) +
@@ -177,6 +265,13 @@ ggplot(sensors[date >= "2021-05-02" & date <= "2021-05-05", ],
        y = "Relative humidity (%)") + 
   facet_grid(~ site)
 
+```
+
+#### Leaf Wetness
+```{r}
+ggplot(sensors[date >= "2021-05-02" & date <= "2021-05-05", ],
+       aes(time, wet, color = site)) + 
+  geom_jitter(alpha = 0.5)
 ```
 
 ```{r, fig.width= 20, fig.height=12}
@@ -191,8 +286,10 @@ ggplot(sensors[date >= "2021-05-02" & date <= "2021-05-05", ],
 \newpage
 
 
+
+
 # ANOVA and Post-Hoc
-## By Infection period {.tabset}
+## By infection period {.tabset}
 
 ### March 28th - 29th {.tabset}
 
