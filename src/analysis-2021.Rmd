@@ -18,8 +18,8 @@ library("data.table")
 ```
 
 ```{r}
-infect <- data.table(read.csv("Infection Event Summary_4-28.csv"))
-sensors <- data.table(rad.csv("sensors.csv"))
+infect <- data.table(read.csv("data/Infection Event Summary_4-28.csv"))
+sensors <- data.table(read.csv("sensors.csv"))
 names(infect)[1:6] = c("date", "infect_events", "avg_wet_hours_temp", "wet_hours", "humid_hours(90+)", "rain_amt_in")
 ```
 

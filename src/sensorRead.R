@@ -3,13 +3,11 @@
 
 # req lib
 library("reshape2")
-library("dplyr")
-library("ggplot2")
-library("tidyr")
-library("data.table")
+library(tidyverse)
+
 
 # import sensor file
-sensors <- data.table(read.csv('ow_ns.csv'))
+sensors <- read_csv('data/ow_ns.csv')
 names(sensors)[1] <- "datetime"
 
 #Convert to long form
